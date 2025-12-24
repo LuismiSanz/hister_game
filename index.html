@@ -3,69 +3,90 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>Hitster Web - Versión Todo en Uno</title>
+    <title>Hitster Web - Edición Equipos</title>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/Sortable/1.15.0/Sortable.min.js"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
 
     <style>
-        /* --- ESTILOS CSS INTEGRADOS --- */
-        :root { --bg: #121212; --card: #1e1e1e; --green: #1db954; --text: #fff; --red: #e91e63; }
-        body { margin: 0; font-family: sans-serif; background: var(--bg); color: var(--text); height: 100vh; display: flex; flex-direction: column; overflow: hidden; }
-        .screen { width: 100%; height: 100%; display: flex; flex-direction: column; }
-        .hidden { display: none !important; }
+        /* --- ESTILOS 2.0 CON CARÁTULAS Y EQUIPOS --- */
+        :root { --bg: #121212; --card: #1e1e1e; --green: #1db954; --blue: #3b82f6; --text: #fff; --red: #e91e63; }
+        body { margin: 0; font-family: 'Segoe UI', sans-serif; background: var(--bg); color: var(--text); height: 100vh; display: flex; flex-direction: column; overflow: hidden; }
         
         /* Start Screen */
-        #start-screen { justify-content: center; align-items: center; text-align: center; padding: 20px; }
-        .logo { font-size: 3rem; color: var(--green); font-weight: bold; margin-bottom: 20px; }
-        .btn { background: var(--green); border: none; padding: 15px 40px; font-size: 1.5rem; border-radius: 50px; cursor: pointer; font-weight: bold; transition: transform 0.1s; }
+        #start-screen { display: flex; flex-direction: column; justify-content: center; align-items: center; text-align: center; height: 100%; padding: 20px; background: radial-gradient(circle at center, #222, #000); }
+        .logo { font-size: 3.5rem; color: var(--green); font-weight: 900; letter-spacing: -2px; margin-bottom: 10px; text-shadow: 0 0 20px rgba(29,185,84,0.3); }
+        .btn { background: var(--green); color: #000; border: none; padding: 18px 50px; font-size: 1.2rem; border-radius: 50px; cursor: pointer; font-weight: bold; margin-top: 20px; transition: transform 0.1s; box-shadow: 0 4px 15px rgba(29,185,84,0.4); }
         .btn:active { transform: scale(0.95); }
-        .btn:disabled { background: #555; cursor: not-allowed; opacity: 0.7; }
-        
-        /* Game Screen */
-        .header { padding: 10px 20px; background: #000; display: flex; justify-content: space-between; font-weight: bold; font-size: 1.2rem; }
+        .btn:disabled { background: #444; color: #888; cursor: not-allowed; box-shadow: none; }
+
+        /* Marcador Equipos */
+        .scoreboard { display: flex; background: #000; padding: 15px; justify-content: space-around; border-bottom: 1px solid #333; z-index: 10; }
+        .team-score { text-align: center; opacity: 0.5; transition: all 0.3s; transform: scale(0.9); }
+        .team-score.active { opacity: 1; transform: scale(1.1); font-weight: bold; text-shadow: 0 0 10px currentColor; }
+        .team-name { font-size: 0.8rem; text-transform: uppercase; letter-spacing: 1px; margin-bottom: 5px; }
+        .score-val { font-size: 1.8rem; font-weight: bold; }
+        .t1 { color: var(--green); }
+        .t2 { color: var(--blue); }
+
+        /* Zona de Juego */
         #timeline-container { flex: 1; overflow-y: auto; padding: 20px; background: #181818; display: flex; flex-direction: column; align-items: center; }
-        #timeline-list { width: 100%; max-width: 500px; min-height: 100px; padding-bottom: 50px; }
-        
-        /* Cards */
-        .card { background: var(--card); padding: 15px; margin-bottom: 10px; border-radius: 10px; display: flex; justify-content: space-between; align-items: center; border: 1px solid #333; box-shadow: 0 4px 6px rgba(0,0,0,0.3); touch-action: none; }
+        #timeline-list { width: 100%; max-width: 500px; padding-bottom: 20px; }
+
+        /* Cartas Estilo Spotify */
+        .card { background: var(--card); padding: 10px; margin-bottom: 12px; border-radius: 12px; display: flex; align-items: center; border: 1px solid #333; box-shadow: 0 4px 6px rgba(0,0,0,0.3); position: relative; overflow: hidden; }
         .card.playing { border: 2px solid var(--green); background: #2a2a2a; animation: pulse 1.5s infinite; }
-        .card.correct { border-color: var(--green); background: rgba(29, 185, 84, 0.2); }
-        .card.wrong { border-color: var(--red); background: rgba(233, 30, 99, 0.2); }
-        .card-info { flex: 1; text-align: left; }
-        .card-title { font-weight: bold; font-size: 1.1rem; margin-bottom: 4px; }
-        .card-artist { color: #aaa; font-size: 0.9rem; }
-        .card-year { font-weight: bold; background: #000; padding: 5px 10px; border-radius: 5px; color: var(--green); margin-left: 10px; }
+        .card.correct { border-color: var(--green); background: rgba(29, 185, 84, 0.15); }
+        .card.wrong { border-color: var(--red); background: rgba(233, 30, 99, 0.15); }
+        
+        /* Carátulas */
+        .cover-img { width: 60px; height: 60px; border-radius: 6px; object-fit: cover; margin-right: 15px; transition: filter 0.5s; background: #000; }
+        .blurred { filter: blur(8px) brightness(0.6); } /* Anti-spoiler */
+        
+        .card-info { flex: 1; overflow: hidden; }
+        .card-title { font-weight: bold; font-size: 1rem; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+        .card-artist { color: #b3b3b3; font-size: 0.85rem; margin-top: 3px; }
+        .card-year { font-weight: bold; background: #000; padding: 6px 12px; border-radius: 20px; color: var(--green); font-size: 0.9rem; margin-left: 10px; min-width: 40px; text-align: center; }
         .hidden-year { color: transparent; text-shadow: 0 0 8px #fff; }
 
-        /* Controls */
-        #current-card-zone { background: #000; padding: 20px; border-top: 1px solid #333; text-align: center; z-index: 100; }
-        #hand-list { min-height: 80px; max-width: 500px; margin: 0 auto 15px auto; }
+        /* Panel de Control */
+        #current-card-zone { background: #000; padding: 20px; border-top: 1px solid #333; z-index: 50; }
+        #instruction { text-align: center; color: #888; font-size: 0.9rem; margin-bottom: 10px; }
+        #hand-list { max-width: 500px; margin: 0 auto 15px auto; min-height: 85px; }
         .controls { display: flex; gap: 10px; max-width: 500px; margin: 0 auto; }
-        .controls button { flex: 1; padding: 15px; border: none; border-radius: 10px; font-weight: bold; font-size: 1rem; cursor: pointer; }
-        #btn-replay { background: #333; color: white; }
-        #btn-check { background: var(--green); color: black; }
+        .btn-game { flex: 1; padding: 15px; border: none; border-radius: 12px; font-weight: bold; cursor: pointer; font-size: 1rem; }
+        .btn-replay { background: #333; color: white; flex: 0.3; }
+        .btn-check { background: var(--green); color: black; flex: 1; }
 
         /* Modal */
-        .modal { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.9); display: flex; justify-content: center; align-items: center; z-index: 200; }
-        .modal-content { background: #222; padding: 40px; border-radius: 15px; text-align: center; }
-        
+        .modal { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.9); display: flex; justify-content: center; align-items: center; z-index: 100; }
+        .modal-box { background: #222; padding: 40px; border-radius: 20px; text-align: center; border: 1px solid #444; max-width: 80%; }
+        .winner-text { font-size: 2rem; font-weight: bold; margin-bottom: 20px; background: -webkit-linear-gradient(#1db954, #3b82f6); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
+
         @keyframes pulse { 0% { box-shadow: 0 0 0 0 rgba(29, 185, 84, 0.4); } 70% { box-shadow: 0 0 0 10px rgba(0,0,0,0); } 100% { box-shadow: 0 0 0 0 rgba(0,0,0,0); } }
-        #youtube-wrapper { position: absolute; opacity: 0; pointer-events: none; }
+        .hidden { display: none !important; }
+        #youtube-wrapper { position: absolute; pointer-events: none; opacity: 0; }
     </style>
 </head>
 <body>
 
-    <div id="start-screen" class="screen">
-        <div class="logo">🎵 HITSTER WEB</div>
-        <p>Ordena las canciones cronológicamente.</p>
-        <p id="loading-msg" style="color: yellow;">Cargando motor de audio...</p>
+    <div id="start-screen">
+        <div class="logo">🎵 HITSTER<br><span style="font-size:1.5rem; color:#fff">PARTY EDITION</span></div>
+        <p style="color:#aaa; margin-top:0">Modo Equipos • Con Carátulas</p>
+        <p id="loading-text" style="color:#yellow; font-size:0.9rem; margin-top:30px">Conectando altavoces...</p>
         <button id="btn-start" onclick="initGame()" class="btn" disabled>ESPERA...</button>
     </div>
 
-    <div id="game-screen" class="screen hidden">
-        <div class="header">
-            <div>❤️ <span id="lives">3</span></div>
-            <div>🏆 <span id="points">0</span></div>
+    <div id="game-screen" class="hidden">
+        <div class="scoreboard">
+            <div id="team1-ui" class="team-score active t1">
+                <div class="team-name">EQUIPO 1</div>
+                <div class="score-val" id="score1">0</div>
+            </div>
+            <div style="display:flex; align-items:center; color:#444; font-size:1.5rem">VS</div>
+            <div id="team2-ui" class="team-score t2">
+                <div class="team-name">EQUIPO 2</div>
+                <div class="score-val" id="score2">0</div>
+            </div>
         </div>
 
         <div id="timeline-container">
@@ -73,27 +94,27 @@
         </div>
 
         <div id="current-card-zone">
-            <p id="instruction">Arrastra la carta arriba:</p>
+            <p id="instruction">Turno actual: <span id="turn-indicator" style="color:var(--green); font-weight:bold">EQUIPO 1</span></p>
             <div id="hand-list"></div>
             <div class="controls">
-                <button id="btn-replay" onclick="replayAudio()"><i class="fa-solid fa-rotate-right"></i></button>
-                <button id="btn-check" onclick="checkAnswer()">CONFIRMAR</button>
+                <button class="btn-game btn-replay" onclick="replayAudio()"><i class="fa-solid fa-rotate-right"></i></button>
+                <button class="btn-game btn-check" onclick="checkAnswer()">CONFIRMAR POSICIÓN</button>
             </div>
         </div>
     </div>
 
     <div id="youtube-wrapper"><div id="player"></div></div>
 
-    <div id="game-over-modal" class="modal hidden">
-        <div class="modal-content">
-            <h2 style="color:var(--red)">¡Juego Terminado!</h2>
-            <p>Puntuación Final: <span id="final-score" style="font-size:2rem; font-weight:bold; color:white">0</span></p>
-            <button onclick="location.reload()" class="btn">Jugar de nuevo</button>
+    <div id="game-over-modal" class="hidden modal">
+        <div class="modal-box">
+            <div class="winner-text" id="winner-msg">¡EQUIPO 1 GANA!</div>
+            <p>Han demostrado ser los reyes de la pista.</p>
+            <button onclick="location.reload()" class="btn">Jugar Revancha</button>
         </div>
     </div>
 
     <script>
-        // --- 1. BASE DE DATOS (PEGADA DIRECTAMENTE) ---
+        // --- BASE DE DATOS (Misma de antes) ---
         const dbSongs = [
             { "id": "fJ9rUzIMcZQ", "title": "Bohemian Rhapsody", "artist": "Queen", "year": 1975, "offset": 0 },
   { "id": "9jK-NcRmVcw", "title": "The Final Countdown", "artist": "Europe", "year": 1986, "offset": 0 },
@@ -406,53 +427,47 @@
   { "id": "OwO7WkAfDNo", "title": "No dudaría", "artist": "Antonio Flores", "year": 1980, "offset": 0 }
         ];
 
-        // --- 2. VARIABLES GLOBALES ---
+        // --- ESTADO DEL JUEGO ---
         let player;
         let allSongs = [];
         let timeline = [];
         let currentSong = null;
-        let lives = 3;
-        let points = 0;
-        let timelineSortable, handSortable;
+        let currentTurn = 1; // 1 o 2
+        let scores = { 1: 0, 2: 0 };
+        const WINNING_SCORE = 10; // Puntos para ganar
+        let timelineSortable;
 
-        // --- 3. INICIALIZACIÓN DE YOUTUBE ---
-        // Se llama automáticamente cuando la API carga
+        // --- INICIALIZACIÓN ---
         function onYouTubeIframeAPIReady() {
-            console.log("YouTube API Ready");
             player = new YT.Player('player', {
                 height: '1', width: '1',
                 playerVars: { 'playsinline': 1, 'controls': 0, 'disablekb': 1 },
                 events: {
                     'onReady': () => {
-                        // Habilitamos el botón solo cuando YouTube está listo
-                        const btn = document.getElementById('btn-start');
-                        btn.disabled = false;
-                        btn.innerText = "JUGAR AHORA";
-                        document.getElementById('loading-msg').style.display = 'none';
+                        document.getElementById('btn-start').disabled = false;
+                        document.getElementById('btn-start').innerText = "JUGAR EQUIPOS";
+                        document.getElementById('loading-text').style.display = 'none';
                     }
                 }
             });
         }
 
-        // --- 4. LÓGICA DEL JUEGO ---
         function initGame() {
-            if(!window.Sortable) { alert("Error: No se ha cargado SortableJS. Revisa tu conexión a internet."); return; }
-            
-            // Copiar canciones
+            if(!window.Sortable) { alert("Necesitas internet para cargar las librerías."); return; }
             allSongs = [...dbSongs];
             
-            // UI Switch
+            // Reset UI
             document.getElementById('start-screen').classList.add('hidden');
             document.getElementById('game-screen').classList.remove('hidden');
-            
-            // Init Drag & Drop
-            const timelineEl = document.getElementById('timeline-list');
-            const handEl = document.getElementById('hand-list');
+            scores = {1:0, 2:0};
+            currentTurn = 1;
+            updateTurnUI();
 
-            timelineSortable = new Sortable(timelineEl, { group: 'shared', animation: 150 });
-            handSortable = new Sortable(handEl, { group: 'shared', animation: 150, sort: false });
+            // Drag & Drop
+            timelineSortable = new Sortable(document.getElementById('timeline-list'), { group: 'shared', animation: 150 });
+            new Sortable(document.getElementById('hand-list'), { group: 'shared', animation: 150, sort: false });
 
-            // Primera carta gratis
+            // Carta Inicial Gratis
             const first = getRandomSong();
             timeline.push(first);
             renderTimeline();
@@ -460,15 +475,15 @@
             nextRound();
         }
 
+        // --- LÓGICA DE TURNOS ---
         function nextRound() {
             currentSong = getRandomSong();
-            if (!currentSong) return gameOver();
+            if (!currentSong) { alert("¡Se acabaron las canciones!"); return; }
 
-            // Poner carta en mano
+            // Poner carta en mano (oculta y borrosa)
             const handList = document.getElementById('hand-list');
             handList.innerHTML = createCardHTML(currentSong, false);
 
-            // Reproducir
             if(player && player.loadVideoById) {
                 player.loadVideoById({
                     videoId: currentSong.id,
@@ -478,15 +493,15 @@
         }
 
         function checkAnswer() {
-            const timelineEl = document.getElementById('timeline-list');
-            const cards = Array.from(timelineEl.children);
-            const userIndex = cards.findIndex(card => card.classList.contains('playing'));
+            const list = document.getElementById('timeline-list');
+            const cards = Array.from(list.children);
+            const userIndex = cards.findIndex(c => c.classList.contains('playing'));
 
-            if (userIndex === -1) { alert("¡Arrastra la carta a la línea de tiempo primero!"); return; }
+            if (userIndex === -1) { alert("¡Arrastra la carta a la línea de tiempo!"); return; }
 
             player.stopVideo();
 
-            // Lógica
+            // Comprobar Años
             let prevYear = -Infinity;
             let nextYear = Infinity;
             if (userIndex > 0) prevYear = parseInt(cards[userIndex - 1].dataset.year);
@@ -498,34 +513,78 @@
             // UI Feedback
             const playedCard = cards[userIndex];
             playedCard.classList.remove('playing');
-            playedCard.querySelector('.card-year').classList.remove('hidden-year');
-            playedCard.querySelector('.card-year').innerText = actualYear;
+            
+            // REVELAR CARÁTULA Y AÑO
+            const img = playedCard.querySelector('.cover-img');
+            img.classList.remove('blurred'); // Quitar borrosidad
+            
+            const yearTag = playedCard.querySelector('.card-year');
+            yearTag.classList.remove('hidden-year');
+            yearTag.innerText = actualYear;
 
             if (isCorrect) {
                 playedCard.classList.add('correct');
-                points++;
-                document.getElementById('points').innerText = points;
-                timeline.splice(userIndex, 0, currentSong); // Guardar en lógica
-                setTimeout(() => { playedCard.classList.remove('correct'); nextRound(); }, 1000);
+                scores[currentTurn]++;
+                document.getElementById(`score${currentTurn}`).innerText = scores[currentTurn];
+                
+                // Guardar en array lógico
+                timeline.splice(userIndex, 0, currentSong);
+                
+                if (scores[currentTurn] >= WINNING_SCORE) {
+                    setTimeout(() => showWinner(currentTurn), 1000);
+                    return;
+                }
             } else {
                 playedCard.classList.add('wrong');
-                lives--;
-                document.getElementById('lives').innerText = lives;
-                alert(`¡Fallo! Era de ${actualYear}`);
-                playedCard.remove(); // Quitar carta
-                if (lives <= 0) gameOver();
-                else nextRound();
+                setTimeout(() => {
+                    alert(`¡Fallo! Era de ${actualYear} (${currentSong.artist})`);
+                    playedCard.remove(); // Se descarta si falla
+                }, 500);
             }
+
+            // CAMBIO DE TURNO (Siempre pasa turno en Hitster tras jugar)
+            setTimeout(() => {
+                if (isCorrect) playedCard.classList.remove('correct');
+                switchTurn();
+                nextRound();
+            }, 1500);
         }
 
-        function getRandomSong() {
-            if (allSongs.length === 0) return null;
-            return allSongs.splice(Math.floor(Math.random() * allSongs.length), 1)[0];
+        function switchTurn() {
+            currentTurn = currentTurn === 1 ? 2 : 1;
+            updateTurnUI();
         }
 
+        function updateTurnUI() {
+            // Actualizar header
+            document.getElementById('team1-ui').classList.toggle('active', currentTurn === 1);
+            document.getElementById('team2-ui').classList.toggle('active', currentTurn === 2);
+            
+            // Actualizar texto abajo
+            const indicator = document.getElementById('turn-indicator');
+            indicator.innerText = `EQUIPO ${currentTurn}`;
+            indicator.style.color = currentTurn === 1 ? 'var(--green)' : 'var(--blue)';
+        }
+
+        function showWinner(team) {
+            document.getElementById('game-over-modal').classList.remove('hidden');
+            const msg = document.getElementById('winner-msg');
+            msg.innerText = `¡EQUIPO ${team} GANA!`;
+            msg.style.background = team === 1 ? 
+                '-webkit-linear-gradient(#1db954, #fff)' : 
+                '-webkit-linear-gradient(#3b82f6, #fff)';
+            msg.style.webkitBackgroundClip = 'text';
+        }
+
+        // --- VISUALES ---
         function createCardHTML(song, revealed) {
+            // URL Mágica de Miniatura YouTube
+            const thumbUrl = `https://img.youtube.com/vi/${song.id}/mqdefault.jpg`;
+            const blurClass = revealed ? '' : 'blurred';
+            
             return `
                 <div class="card ${!revealed ? 'playing' : ''}" data-year="${song.year}">
+                    <img src="${thumbUrl}" class="cover-img ${blurClass}">
                     <div class="card-info">
                         <div class="card-title">${song.title}</div>
                         <div class="card-artist">${song.artist}</div>
@@ -539,14 +598,14 @@
             document.getElementById('timeline-list').innerHTML = timeline.map(s => createCardHTML(s, true)).join('');
         }
 
-        function replayAudio() { if(player) player.playVideo(); }
-        function gameOver() {
-            document.getElementById('game-over-modal').classList.remove('hidden');
-            document.getElementById('final-score').innerText = points;
+        function getRandomSong() {
+            if (allSongs.length === 0) return null;
+            return allSongs.splice(Math.floor(Math.random() * allSongs.length), 1)[0];
         }
+
+        function replayAudio() { if(player) player.playVideo(); }
 
     </script>
     <script src="https://www.youtube.com/iframe_api"></script>
 </body>
 </html>
-
