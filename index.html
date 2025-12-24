@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Hitster Web España</title>
+    <link rel="stylesheet" href="style.css">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/Sortable/1.15.0/Sortable.min.js"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+</head>
+<body>
+
+    <div id="start-screen" class="screen">
+        <div class="logo">🎵 HITSTER WEB</div>
+        <p>Ordena las canciones cronológicamente.</p>
+        <button onclick="initGame()" class="btn-primary">JUGAR</button>
+        <p class="small">Base de datos: 20 éxitos (Demo)</p>
+    </div>
+
+    <div id="game-screen" class="screen hidden">
+        <div class="header">
+            <div class="score">Vidas: <span id="lives">3</span></div>
+            <div class="score">Puntos: <span id="points">0</span></div>
+        </div>
+
+        <div id="youtube-wrapper">
+            <div id="player"></div>
+        </div>
+
+        <div id="timeline-container">
+            <div id="timeline-list">
+                </div>
+        </div>
+
+        <div id="current-card-zone">
+            <p id="instruction-text">Escucha y arrastra la carta arriba:</p>
+            <div id="hand-list">
+                </div>
+            <div class="controls">
+                <button id="btn-replay" onclick="replayAudio()"><i class="fa-solid fa-rotate-right"></i> Replay</button>
+                <button id="btn-check" onclick="checkAnswer()" class="btn-action">CONFIRMAR</button>
+            </div>
+        </div>
+    </div>
+
+    <div id="game-over-modal" class="modal hidden">
+        <div class="modal-content">
+            <h2>¡Juego Terminado!</h2>
+            <p>Puntuación Final: <span id="final-score">0</span></p>
+            <button onclick="location.reload()" class="btn-primary">Jugar de nuevo</button>
+        </div>
+    </div>
+
+    <script src="game.js"></script>
+    <script src="https://www.youtube.com/iframe_api"></script>
+</body>
+</html>
