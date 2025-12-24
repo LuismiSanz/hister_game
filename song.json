@@ -1,6 +1,5 @@
 [
   { "id": "fJ9rUzIMcZQ", "title": "Bohemian Rhapsody", "artist": "Queen", "year": 1975, "offset": 0 },
-  { "id": "aaaaaa", "title": "Chiquilla", "artist": "Seguridad Social", "year": 1991, "id": "r2M02_1Lh_o", "offset": 0 },
   { "id": "9jK-NcRmVcw", "title": "The Final Countdown", "artist": "Europe", "year": 1986, "offset": 0 },
   { "id": "kffacxfA7G4", "title": "Baby", "artist": "Justin Bieber", "year": 2010, "offset": 0 },
   { "id": "7zp1TbLFPp8", "title": "Aserejé", "artist": "Las Ketchup", "year": 2002, "offset": 0 },
@@ -310,3 +309,4 @@
   { "id": "sTSphzJALhY", "title": "Ni tú ni nadie", "artist": "Alaska y Dinarama", "year": 1984, "offset": 0 },
   { "id": "OwO7WkAfDNo", "title": "No dudaría", "artist": "Antonio Flores", "year": 1980, "offset": 0 }
 ]
+
